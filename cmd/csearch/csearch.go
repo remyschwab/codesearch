@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 	"runtime/pprof"
 
 	"github.com/google/codesearch/index"
@@ -56,6 +57,8 @@ var (
 )
 
 func Main() {
+	ix := index.Open(index.File())
+	start := time.Now()	
 	g := regexp.Grep{
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
@@ -101,7 +104,6 @@ func Main() {
 		log.Printf("query: %s\n", q)
 	}
 
-	ix := index.Open(index.File())
 	ix.Verbose = *verboseFlag
 	var post []uint32
 	if *bruteFlag {
@@ -136,6 +138,7 @@ func Main() {
 	}
 
 	matches = g.Match
+	log.Printf("%s\n", time.Since(start))
 }
 
 func main() {
